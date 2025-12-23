@@ -53,31 +53,32 @@ namespace TaskManagement.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddProjectRequestDto addProjectRequestDto)
         {
-            var project = mapper.Map<Project>(addProjectRequestDto);
 
-            project = await projectRepository.CreateAsync(project);
+                var project = mapper.Map<Project>(addProjectRequestDto);
 
-            var projectDto = mapper.Map<ProjectDto>(project);
+                project = await projectRepository.CreateAsync(project);
 
-            return CreatedAtAction(nameof(GetById), new { id = projectDto.Id }, projectDto);
+                var projectDto = mapper.Map<ProjectDto>(project);
+
+                return CreatedAtAction(nameof(GetById), new { id = projectDto.Id }, projectDto);
         }
 
         [HttpPut]
         [Route("{id:guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateProjectRequestDto updateProjectRequestDto)
         {
-            var project = mapper.Map<Project>(updateProjectRequestDto);
+                var project = mapper.Map<Project>(updateProjectRequestDto);
 
-            project = await projectRepository.UpdateAsync(id, project);
+                project = await projectRepository.UpdateAsync(id, project);
 
-            if (project == null)
-            {
-                return NotFound();
-            }
+                if (project == null)
+                {
+                    return NotFound();
+                }
 
-            var projectDto = mapper.Map<ProjectDto>(project);
+                var projectDto = mapper.Map<ProjectDto>(project);
 
-            return Ok(projectDto);
+                return Ok(projectDto);
         }
 
         [HttpDelete]

@@ -53,31 +53,31 @@ namespace TaskManagement.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddWorkTaskRequestDto addWorkTaskRequestDto)
         {
-            var task = Mapper.Map<WorkTask>(addWorkTaskRequestDto);
+                var task = Mapper.Map<WorkTask>(addWorkTaskRequestDto);
 
-            task = await workTaskRepository.CreateAsync(task);
+                task = await workTaskRepository.CreateAsync(task);
 
-            var taskDto = Mapper.Map<WorkTaskDto>(task);
+                var taskDto = Mapper.Map<WorkTaskDto>(task);
 
-            return CreatedAtAction(nameof(GetById), new { id = taskDto.Id }, taskDto);
+                return CreatedAtAction(nameof(GetById), new { id = taskDto.Id }, taskDto);
         }
 
         [HttpPut]
         [Route("{id:guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateWorkTaskRequestDto updateWorkTaskRequestDto)
         {
-            var task = Mapper.Map<WorkTask>(updateWorkTaskRequestDto);
+                var task = Mapper.Map<WorkTask>(updateWorkTaskRequestDto);
 
-            task = await workTaskRepository.UpdateAsync(id, task);
+                task = await workTaskRepository.UpdateAsync(id, task);
 
-            if (task == null)
-            {
-                return NotFound();
-            }
+                if (task == null)
+                {
+                    return NotFound();
+                }
 
-            var taskDto = Mapper.Map<WorkTaskDto>(task);
+                var taskDto = Mapper.Map<WorkTaskDto>(task);
 
-            return Ok(taskDto);
+                return Ok(taskDto);
         }
 
         [HttpDelete]
