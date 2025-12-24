@@ -20,9 +20,9 @@ namespace TaskManagement.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? filterQuery,[FromQuery] bool isAscending = true, [FromQuery] int pageNumber = 1,[FromQuery] int pageSize = 100)
         {
-            var projects = await projectRepository.GetAllAsync();
+            var projects = await projectRepository.GetAllAsync(filterQuery, isAscending, pageNumber, pageSize);
 
             if (projects == null || !projects.Any())
             {

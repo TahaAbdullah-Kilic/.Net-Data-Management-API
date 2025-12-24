@@ -12,7 +12,10 @@ namespace TaskManagement.API.Models.Dto
         [MaxLength(1000, ErrorMessage = "Description can be a maximum of 1000 characters")]
         public string? Description { get; set; }
 
-        
+        [Range(0, 1000, ErrorMessage = "Estimated Hours can be a maximum of 1000 hours")]
+        public int? EstimatedTimeInHours { get; set; }
+
+
         [Required]
         public Guid ProjectId { get; set; }
         

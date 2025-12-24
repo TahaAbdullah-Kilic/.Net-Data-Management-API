@@ -20,14 +20,9 @@ namespace TaskManagement.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool isAscending = true, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 100)
         {
-            var tasks = await workTaskRepository.GetAllAsync();
-
-            if (tasks == null || !tasks.Any())
-            {
-                return NotFound();
-            }
+            var tasks = await workTaskRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending, pageNumber, pageSize);
 
             var tasksDto = Mapper.Map<List<WorkTaskDto>>(tasks);
 

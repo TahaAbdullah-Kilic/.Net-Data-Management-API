@@ -13,9 +13,29 @@ namespace TaskManagement.API.Repositories
             this.DbContext = dbContext;
         }
 
-        public async Task<List<Project>> GetAllAsync()
+        public async Task<List<Project>> GetAllAsync(string? filterQuery, bool isAscending, int pageNumber = 1, int pageSize = 100)
         {
-            return await DbContext.Projects.ToListAsync();
+            var projects = DbContext.Projects.AsQueryable();
+            
+            if (!string.IsNullOrWhiteSpace(filterQuery))
+            {
+                projects = projects.Where(p => p.Title.Contains(filterQuery));
+            }
+
+            projects = isAscending 
+                ? projects.OrderBy(p => p.Title) 
+                : projects.OrderByDescending(p => p.Title);
+
+            pageNumber = pageNumber < 1 
+                ? 1 
+                : pageNumber;
+            pageSize = pageSize < 1 
+                ? 10 
+                : pageSize;
+
+            projects = projects.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            return await projects.ToListAsync();
         }
 
         public async Task<Project?> GetByIdAsync(Guid id)
@@ -42,7 +62,6 @@ namespace TaskManagement.API.Repositories
 
             existingProject.Title = project.Title;
             existingProject.Description = project.Description;
-            existingProject.EstimatedTimeInHours = project.EstimatedTimeInHours;
 
             await DbContext.SaveChangesAsync();
             

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskManagement.API.Data;
 
@@ -11,9 +12,11 @@ using TaskManagement.API.Data;
 namespace TaskManagement.API.Migrations
 {
     [DbContext(typeof(TaskManagementDbContext))]
-    partial class TaskManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251223214522_Task Seeding")]
+    partial class TaskSeeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,7 @@ namespace TaskManagement.API.Migrations
                         new
                         {
                             Id = new Guid("b45412d8-abc9-4355-aff7-a88f9cb52cab"),
-                            Title = "Low"
+                            Title = "Easy"
                         },
                         new
                         {
@@ -50,7 +53,7 @@ namespace TaskManagement.API.Migrations
                         new
                         {
                             Id = new Guid("059b3efd-aa86-467f-a5fa-9f0b0195342f"),
-                            Title = "High"
+                            Title = "Hard"
                         });
                 });
 
@@ -63,6 +66,9 @@ namespace TaskManagement.API.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("EstimatedTimeInHours")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -77,49 +83,15 @@ namespace TaskManagement.API.Migrations
                         {
                             Id = new Guid("073859b5-ae0c-4473-a156-435934ab5467"),
                             Description = "This is the first project.",
+                            EstimatedTimeInHours = 100,
                             Title = "Project Alpha"
                         },
                         new
                         {
                             Id = new Guid("69335471-cbd2-405a-b0bc-1cf94ba6aa0e"),
                             Description = "This is the second project.",
+                            EstimatedTimeInHours = 150,
                             Title = "Project Beta"
-                        },
-                        new
-                        {
-                            Id = new Guid("8f3a2c91-6b7e-4f5c-9a12-1d3e5b7c9a21"),
-                            Description = "An e-commerce infrastructure covering product, order, and inventory management.",
-                            Title = "E-Commerce Management System"
-                        },
-                        new
-                        {
-                            Id = new Guid("c1e47b62-2d94-4a88-bf73-9e6a41d0f5bc"),
-                            Description = "Redevelopment of the company’s existing website with a modern UI and performance-focused approach.",
-                            Title = "Corporate Website Redesign"
-                        },
-                        new
-                        {
-                            Id = new Guid("b1a7f3e2-4c8a-4e0a-9d3f-1b2c3d4e5f60"),
-                            Description = "Digital management of employee, leave, performance, and payroll processes.",
-                            Title = "Human Resources Management System"
-                        },
-                        new
-                        {
-                            Id = new Guid("c2d4e6f8-1a3b-4c5d-9e7f-8a9b0c1d2e34"),
-                            Description = "Real-time monitoring of warehouse movements and inventory levels.",
-                            Title = "Inventory and Warehouse Tracking Application"
-                        },
-                        new
-                        {
-                            Id = new Guid("e9f1a2b3-4c5d-6e7f-8a9b-0c1d2e3f4a56"),
-                            Description = "Tracking and reporting customer requests using a ticket-based workflow.",
-                            Title = "Customer Support and Ticketing System"
-                        },
-                        new
-                        {
-                            Id = new Guid("f0123456-789a-4bcd-8e9f-0123456789ab"),
-                            Description = "Centralized management of income, expenses, invoices, and payment processes.",
-                            Title = "Finance and Invoice Tracking System"
                         });
                 });
 
@@ -131,9 +103,6 @@ namespace TaskManagement.API.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("EstimatedTimeInHours")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("PriorityId")
                         .HasColumnType("uniqueidentifier");
@@ -158,7 +127,6 @@ namespace TaskManagement.API.Migrations
                         {
                             Id = new Guid("d2f1c4e8-3b6a-4f5e-9f3e-1c2b3a4d5e6f"),
                             Description = "Create the initial database schema for the project.",
-                            EstimatedTimeInHours = 100,
                             PriorityId = new Guid("6878803a-19d8-45ac-b84e-5b0f68989132"),
                             ProjectId = new Guid("073859b5-ae0c-4473-a156-435934ab5467"),
                             Title = "Design Database Schema"
@@ -167,7 +135,6 @@ namespace TaskManagement.API.Migrations
                         {
                             Id = new Guid("e3f2d5c6-4a7b-4c8d-9e0f-2a3b4c5d6e7f"),
                             Description = "Develop the authentication module for user login and registration.",
-                            EstimatedTimeInHours = 100,
                             PriorityId = new Guid("059b3efd-aa86-467f-a5fa-9f0b0195342f"),
                             ProjectId = new Guid("69335471-cbd2-405a-b0bc-1cf94ba6aa0e"),
                             Title = "Implement Authentication"
@@ -176,7 +143,6 @@ namespace TaskManagement.API.Migrations
                         {
                             Id = new Guid("4a2f1e9e-edaa-42bc-9387-649afa9cc936"),
                             Description = "Description for Alpha Task 1",
-                            EstimatedTimeInHours = 100,
                             PriorityId = new Guid("b45412d8-abc9-4355-aff7-a88f9cb52cab"),
                             ProjectId = new Guid("073859b5-ae0c-4473-a156-435934ab5467"),
                             Title = "Alpha Task 1"
@@ -185,7 +151,6 @@ namespace TaskManagement.API.Migrations
                         {
                             Id = new Guid("a857d5c3-7608-4100-9f32-b1e0a099fba1"),
                             Description = "Description for Alpha Task 2",
-                            EstimatedTimeInHours = 100,
                             PriorityId = new Guid("6878803a-19d8-45ac-b84e-5b0f68989132"),
                             ProjectId = new Guid("073859b5-ae0c-4473-a156-435934ab5467"),
                             Title = "Alpha Task 2"
@@ -194,7 +159,6 @@ namespace TaskManagement.API.Migrations
                         {
                             Id = new Guid("4a61d1e9-226e-4e78-8e03-17ac17b8e74a"),
                             Description = "Description for Alpha Task 3",
-                            EstimatedTimeInHours = 100,
                             PriorityId = new Guid("059b3efd-aa86-467f-a5fa-9f0b0195342f"),
                             ProjectId = new Guid("073859b5-ae0c-4473-a156-435934ab5467"),
                             Title = "Alpha Task 3"
@@ -203,7 +167,6 @@ namespace TaskManagement.API.Migrations
                         {
                             Id = new Guid("16d791fc-688d-4568-a107-27671392d18d"),
                             Description = "Description for Alpha Task 4",
-                            EstimatedTimeInHours = 100,
                             PriorityId = new Guid("b45412d8-abc9-4355-aff7-a88f9cb52cab"),
                             ProjectId = new Guid("073859b5-ae0c-4473-a156-435934ab5467"),
                             Title = "Alpha Task 4"
@@ -212,7 +175,6 @@ namespace TaskManagement.API.Migrations
                         {
                             Id = new Guid("99e2e800-7ee7-4fdc-a8b5-ed6f47f95ada"),
                             Description = "Description for Alpha Task 5",
-                            EstimatedTimeInHours = 100,
                             PriorityId = new Guid("6878803a-19d8-45ac-b84e-5b0f68989132"),
                             ProjectId = new Guid("073859b5-ae0c-4473-a156-435934ab5467"),
                             Title = "Alpha Task 5"
@@ -221,7 +183,6 @@ namespace TaskManagement.API.Migrations
                         {
                             Id = new Guid("1e7a6ab0-828b-473f-bb29-a2c80f510ece"),
                             Description = "Description for Beta Task 1",
-                            EstimatedTimeInHours = 100,
                             PriorityId = new Guid("b45412d8-abc9-4355-aff7-a88f9cb52cab"),
                             ProjectId = new Guid("69335471-cbd2-405a-b0bc-1cf94ba6aa0e"),
                             Title = "Beta Task 1"
@@ -230,7 +191,6 @@ namespace TaskManagement.API.Migrations
                         {
                             Id = new Guid("ace396b7-69bd-450b-97cd-da1aa5450914"),
                             Description = "Description for Beta Task 2",
-                            EstimatedTimeInHours = 100,
                             PriorityId = new Guid("6878803a-19d8-45ac-b84e-5b0f68989132"),
                             ProjectId = new Guid("69335471-cbd2-405a-b0bc-1cf94ba6aa0e"),
                             Title = "Beta Task 2"
@@ -239,7 +199,6 @@ namespace TaskManagement.API.Migrations
                         {
                             Id = new Guid("f8d002be-2f6a-4b55-a209-23e076ddfc8f"),
                             Description = "Description for Beta Task 3",
-                            EstimatedTimeInHours = 100,
                             PriorityId = new Guid("059b3efd-aa86-467f-a5fa-9f0b0195342f"),
                             ProjectId = new Guid("69335471-cbd2-405a-b0bc-1cf94ba6aa0e"),
                             Title = "Beta Task 3"
@@ -248,7 +207,6 @@ namespace TaskManagement.API.Migrations
                         {
                             Id = new Guid("a3f9b849-d41c-49e9-bbc1-8f23df2e69dd"),
                             Description = "Description for Beta Task 4",
-                            EstimatedTimeInHours = 100,
                             PriorityId = new Guid("b45412d8-abc9-4355-aff7-a88f9cb52cab"),
                             ProjectId = new Guid("69335471-cbd2-405a-b0bc-1cf94ba6aa0e"),
                             Title = "Beta Task 4"
@@ -257,7 +215,6 @@ namespace TaskManagement.API.Migrations
                         {
                             Id = new Guid("74e7c49d-0b01-4121-a45a-4555d0d2d6c3"),
                             Description = "Description for Beta Task 5",
-                            EstimatedTimeInHours = 100,
                             PriorityId = new Guid("6878803a-19d8-45ac-b84e-5b0f68989132"),
                             ProjectId = new Guid("69335471-cbd2-405a-b0bc-1cf94ba6aa0e"),
                             Title = "Beta Task 5"

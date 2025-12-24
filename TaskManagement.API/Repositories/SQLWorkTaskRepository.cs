@@ -13,9 +13,44 @@ namespace TaskManagement.API.Repositories
             this.DbContext = dbContext;
         }
 
-        public async Task<List<WorkTask>> GetAllAsync()
+        public async Task<List<WorkTask>> GetAllAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 100)
         {
-            return await DbContext.Tasks.Include(t => t.Project).Include(t => t.Priority).ToListAsync();
+            var tasks = DbContext.Tasks.Include(t => t.Project).Include(t => t.Priority).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filterOn) && !string.IsNullOrWhiteSpace(filterQuery))
+            {
+                if (filterOn.Equals("Title", StringComparison.OrdinalIgnoreCase))
+                {
+                    tasks = tasks.Where(t => t.Title.Contains(filterQuery));
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(sortBy))
+            {
+                if (sortBy.Equals("Title", StringComparison.OrdinalIgnoreCase))
+                {
+                    tasks = isAscending
+                        ? tasks.OrderBy(t => t.Title)
+                        : tasks.OrderByDescending(t => t.Title);
+                }
+                if (sortBy.Equals("Time", StringComparison.OrdinalIgnoreCase))
+                {
+                    tasks = isAscending
+                        ? tasks.OrderBy(t => t.EstimatedTimeInHours)
+                        : tasks.OrderByDescending(t => t.EstimatedTimeInHours);
+                }
+            }
+
+            pageNumber = pageNumber < 1
+                ? 1
+                : pageNumber;
+            pageSize = pageSize < 1
+                ? 10
+                : pageSize;
+
+            tasks = tasks.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            return await tasks.ToListAsync();
         }
 
         public async Task<WorkTask?> GetByIdAsync(Guid id)
@@ -42,6 +77,7 @@ namespace TaskManagement.API.Repositories
 
             task.Title = workTask.Title;
             task.Description = workTask.Description;
+            task.EstimatedTimeInHours = workTask.EstimatedTimeInHours;
             task.ProjectId = workTask.ProjectId;
             task.PriorityId = workTask.PriorityId;
             
