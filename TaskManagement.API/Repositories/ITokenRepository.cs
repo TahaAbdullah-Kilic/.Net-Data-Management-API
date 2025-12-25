@@ -1,0 +1,9 @@
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace TaskManagement.API.Repositories
+{
+    public interface ITokenRepository
+    {
+        string CreateJWTToken(IdentityUser user, IList<string> roles);
+    }
+}

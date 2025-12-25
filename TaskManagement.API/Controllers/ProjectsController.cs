@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.API.Models.Domain;
 using TaskManagement.API.Models.Dto;
@@ -20,14 +21,10 @@ namespace TaskManagement.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> GetAll([FromQuery] string? filterQuery,[FromQuery] bool isAscending = true, [FromQuery] int pageNumber = 1,[FromQuery] int pageSize = 100)
         {
             var projects = await projectRepository.GetAllAsync(filterQuery, isAscending, pageNumber, pageSize);
-
-            if (projects == null || !projects.Any())
-            {
-                return NotFound();
-            }
 
             var projectsDto = mapper.Map<List<ProjectDto>>(projects);
 
@@ -36,6 +33,7 @@ namespace TaskManagement.API.Controllers
 
         [HttpGet]
         [Route("{id:guid}")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var project = await projectRepository.GetByIdAsync(id);
@@ -51,6 +49,7 @@ namespace TaskManagement.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] AddProjectRequestDto addProjectRequestDto)
         {
 
@@ -65,6 +64,7 @@ namespace TaskManagement.API.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateProjectRequestDto updateProjectRequestDto)
         {
                 var project = mapper.Map<Project>(updateProjectRequestDto);
@@ -83,6 +83,7 @@ namespace TaskManagement.API.Controllers
 
         [HttpDelete]
         [Route("{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var project = await projectRepository.DeleteAsync(id);
