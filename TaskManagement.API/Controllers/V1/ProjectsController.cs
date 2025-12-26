@@ -1,29 +1,33 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.API.Models.Domain;
 using TaskManagement.API.Models.Dto;
 using TaskManagement.API.Repositories;
 
-namespace TaskManagement.API.Controllers
+namespace TaskManagement.API.Controllers.V1
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     [ApiController]
     public class ProjectsController : ControllerBase
     {
         readonly IProjectRepository projectRepository;
         readonly IMapper mapper;
+        readonly ILogger<ProjectsController> logger;
 
-        public ProjectsController(IProjectRepository projectRepository, IMapper mapper)
+        public ProjectsController(IProjectRepository projectRepository, IMapper mapper, ILogger<ProjectsController> logger)
         {
             this.projectRepository = projectRepository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         [HttpGet]
-        [Authorize(Roles = "User")]
+        //[Authorize(Roles = "User")]
         public async Task<IActionResult> GetAll([FromQuery] string? filterQuery,[FromQuery] bool isAscending = true, [FromQuery] int pageNumber = 1,[FromQuery] int pageSize = 100)
-        {
+        {            
             var projects = await projectRepository.GetAllAsync(filterQuery, isAscending, pageNumber, pageSize);
 
             var projectsDto = mapper.Map<List<ProjectDto>>(projects);

@@ -1,12 +1,14 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.API.Models.Domain;
 using TaskManagement.API.Models.Dto;
 using TaskManagement.API.Repositories;
 
-namespace TaskManagement.API.Controllers
+namespace TaskManagement.API.Controllers.V1
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     [ApiController]
     public class WorkTasksController : ControllerBase
     {
@@ -16,7 +18,7 @@ namespace TaskManagement.API.Controllers
         public WorkTasksController(IWorkTaskRepository workTaskRepository, IMapper mapper)
         {
             this.workTaskRepository = workTaskRepository;
-            this.Mapper = mapper;
+            Mapper = mapper;
         }
 
         [HttpGet]
