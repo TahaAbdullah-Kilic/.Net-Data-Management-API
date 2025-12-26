@@ -14,13 +14,11 @@ namespace TaskManagement.API.Controllers.V1
     {
         readonly UserManager<IdentityUser> userManager;
         readonly ITokenRepository tokenRepository;
-        readonly RoleManager<IdentityRole> roleManager;
 
-        public AuthController(UserManager<IdentityUser> userManager, ITokenRepository tokenRepository, RoleManager<IdentityRole> roleManager)
+        public AuthController(UserManager<IdentityUser> userManager, ITokenRepository tokenRepository)
         {
             this.userManager = userManager;
             this.tokenRepository = tokenRepository;
-            this.roleManager = roleManager;
         }
 
         [HttpPost]
@@ -66,6 +64,11 @@ namespace TaskManagement.API.Controllers.V1
 
             var jwtToken = tokenRepository.CreateJWTToken(user, roles.ToList());
 
+            if (jwtToken == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to generate JWT token");
+            }
+
                 var response = new
                 {
                     Token = jwtToken,
@@ -73,52 +76,6 @@ namespace TaskManagement.API.Controllers.V1
 
             return Ok(response);
 
-        }
-
-        [HttpPost]
-        [Route("assign-role/{userId}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AssignRole([FromRoute] string userId, [FromBody] AssignRoleRequestDto assignRoleRequestDto)
-        {
-            var user = await userManager.FindByIdAsync(userId);
-
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
-
-            foreach (var role in assignRoleRequestDto.Roles)
-            {
-                if (!await roleManager.RoleExistsAsync(role))
-                {
-                    return BadRequest($"Role '{role}' does not exist");
-                }
-            }
-
-            var currentRoles = await userManager.GetRolesAsync(user);
-
-            var rolesToAdd = assignRoleRequestDto.Roles.Except(currentRoles).ToList();
-
-            var rolesToRemove = currentRoles.Except(assignRoleRequestDto.Roles).ToList();
-
-            if (rolesToAdd.Any())
-            {
-                var result = await userManager.AddToRolesAsync(user, rolesToAdd);
-                if (!result.Succeeded)
-                {
-                    return BadRequest(result.Errors);
-                }
-            }
-
-            if (rolesToRemove.Any())
-            {
-                var result = await userManager.RemoveFromRolesAsync(user, rolesToRemove);
-                if (!result.Succeeded)
-                {
-                    return BadRequest(result.Errors);
-                }
-            }
-            return Ok("Roles assigned successfully");
-        }
+        }     
     }
 }

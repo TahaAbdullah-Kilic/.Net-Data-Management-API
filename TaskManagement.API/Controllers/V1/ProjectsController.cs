@@ -25,8 +25,8 @@ namespace TaskManagement.API.Controllers.V1
         }
 
         [HttpGet]
-        //[Authorize(Roles = "User")]
-        public async Task<IActionResult> GetAll([FromQuery] string? filterQuery,[FromQuery] bool isAscending = true, [FromQuery] int pageNumber = 1,[FromQuery] int pageSize = 100)
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetAll([FromQuery] string? filterQuery,[FromQuery] bool isAscending = true, [FromQuery] int pageNumber = 1,[FromQuery] int pageSize = 10)
         {            
             var projects = await projectRepository.GetAllAsync(filterQuery, isAscending, pageNumber, pageSize);
 

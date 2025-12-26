@@ -74,6 +74,8 @@ builder.Services.AddScoped<IProjectRepository, SQLProjectRepository>();
 
 builder.Services.AddScoped<IWorkTaskRepository, SQLWorkTaskRepository>();
 
+builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
+
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));

@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.API.Models.Domain;
 using TaskManagement.API.Models.Dto;
@@ -22,6 +23,7 @@ namespace TaskManagement.API.Controllers.V1
         }
 
         [HttpGet]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool isAscending = true, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 100)
         {
             var tasks = await workTaskRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending, pageNumber, pageSize);
@@ -33,6 +35,7 @@ namespace TaskManagement.API.Controllers.V1
 
         [HttpGet]
         [Route("{id:guid}")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var task = await workTaskRepository.GetByIdAsync(id);
@@ -48,6 +51,7 @@ namespace TaskManagement.API.Controllers.V1
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] AddWorkTaskRequestDto addWorkTaskRequestDto)
         {
                 var task = Mapper.Map<WorkTask>(addWorkTaskRequestDto);
@@ -61,6 +65,7 @@ namespace TaskManagement.API.Controllers.V1
 
         [HttpPut]
         [Route("{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateWorkTaskRequestDto updateWorkTaskRequestDto)
         {
                 var task = Mapper.Map<WorkTask>(updateWorkTaskRequestDto);
@@ -79,6 +84,7 @@ namespace TaskManagement.API.Controllers.V1
 
         [HttpDelete]
         [Route("{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var task = await workTaskRepository.DeleteAsync(id);
